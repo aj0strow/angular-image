@@ -1,7 +1,7 @@
 ;(function (angular) {
   var module = angular.module('ngImage', [])
 
-  module.directive('img', function ($parse) {
+  module.directive('img', function () {
     return {
       restrict: 'E',
       link: function (scope, element, attrs) {
