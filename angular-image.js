@@ -1,25 +1,32 @@
-;(function (angular) {
-  var module = angular.module('ngImage', [])
+angular.module('ngImage', [])
 
-  module.directive('img', function () {
-    return {
-      restrict: 'E',
-      link: function (scope, element, attrs) {
-        element.on('error', function () {
-          if (attrs.ngError) {
-            scope.$eval(attrs.ngError, { $src: this.src })
+.directive('img', function ($parse) {
+  function endsWith (url, path) {
+    var index = url.length - path.length
+    return url.indexOf(path, index) !== -1
+  }
+  
+  return {
+    restrict: 'E',
+    compile: function (__element, attr) {
+      var fn = attr.ngError && $parse(attr.ngError)
+      return function (scope, element) {
+        element.on('error', function (ev) {
+          var src = this.src
+          
+          // If theres an ng-error callback then call it
+          if (fn) {
+            scope.$apply(function () {
+              fn(scope, { $event: ev, $src: src })
+            })
           }
-          var errorSrc = attrs.ngErrorSrc
-          if (errorSrc && !endsWith(this.src, errorSrc)) {
-            element.attr('src', errorSrc)
+          
+          // If theres an ng-error-src then set it
+          if (attr.ngErrorSrc && !endsWith(src, attr.ngErrorSrc)) {
+            element.attr('src', attr.ngErrorSrc)
           }
         })
       }
     }
-
-    function endsWith (url, path) {
-      var index = url.length - path.length
-      return url.indexOf(path, index) !== -1
-    }
-  })
-})(window.angular);
+  }
+})

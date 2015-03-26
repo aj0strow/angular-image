@@ -9,18 +9,10 @@
   <script src="/bower_components/mocha/mocha.js"></script>
   <script src="/angular-image.js"></script>
 </head>
-<body ng-app="test">
-
-  <div style="height: 0; overflow: hidden;">
-    <test-control></test-control>
-    <test-error></test-error>
-    <test-error-src></test-error-src>
-  </div>
-
+<body>
   <div id="mocha"></div>
 
   <script>mocha.setup('bdd')</script>
-  <script src="/test/app.js"></script>
   <script src="/test/angular-image.spec.js"></script>
   <script>$(mocha.run)</script>
   </body>

@@ -1,51 +1,38 @@
 # `angular-image`
 
-Fix and report image errors. Provide a fallback image source if necessary.
+Fix and report image load errors. Provide a fallback image src if desired.
 
-### Usage
+### Report Image Failure
+
+The jquery error event is exposed as `$event` and the failed image url is exposed as `$src`.
 
 ```html
-<img ng-src="{{ user.image }}" ng-error="fixImage(user)">
+<img ng-src="{{ user.image }}" ng-error="report($event, $src)">
 ```
 
 ```javascript
 app.controller(function ($scope) {
   $scope.user = getUser()
 
-  $scope.fixImage = function (user) {
-    // report event or reload user resource
+  $scope.report = function (ev, src) {
+    // reload user resource
   }
 })
 ```
 
-In the meantime, render a fallback image.
+You can specify a fallback image src with interpolation.
 
 ```html
-<img ng-error-src="/assets/errors/user-image/{{ size }}.png">
+<img ng-src="{{ user.image }}" ng-error-src="/fallback/{{ user.type }}.png">
 ```
 
 The `ng-error` invocation injects a special `$src` variable in case you want the exact image url that failed.
 
-```html
-<img src="/broken/path.png" ng-error="reportBrokenImage($src)">
-```
+### Real Use Case
 
-```javascript
-  $scope.reportBrokenImage(url) {
-    // url == '/broken/path.png'
-  }
-```
+Why would you want to catch image load errors? For my use case, I want to replace broken social media profile pictures. If the image is broken, it sends an http request to refresh the image on the server, and then replaces the image with the correct url. 
 
-### Real World
-
-Why would you want this? Well with real-time frameworks like Firebase, there's the opportunity to avoid broken images from 3rd party sources. 
-
-* Michael uploads a new profile pic to Hot Social Network.
-* Jordan visits Michael's profile on your website.
-* Jordan's browser sends a notice to the server that Michael's pic is broken.
-* The server requests Michael's new profile from Hot Social Network, and writes to Firebase.
-* Firebase automatically updates the image src on the next digest cycle. 
-* Jordan notices a half-second delay in the profile pic loading instead of a broken pic. 
+In practice, this means that instead of a completely broken or missing image, it just looks like it took a little longer to load than usual. With something real-time like Firebase, it's hard to tell what loaded correctly the first time and what needed to be corrected. 
 
 ### Install
 
