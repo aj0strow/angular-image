@@ -1,6 +1,6 @@
 angular.module('ngImage', [])
 
-.directive('img', function ($parse) {
+.directive('img', [ '$parse', function ($parse) {
   function endsWith (url, path) {
     var index = url.length - path.length
     return url.indexOf(path, index) !== -1
@@ -29,4 +29,4 @@ angular.module('ngImage', [])
       }
     }
   }
-})
+} ])

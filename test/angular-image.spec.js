@@ -64,12 +64,13 @@ describe('ngImage', function () {
       })
       scope.$digest()
     })
-
+    
     it('should interpolate error src', function (done) {
       var scope = $rootScope.$new()
       var markup = '<img src="/missing.png" ng-error-src="http://placehold.it/{{ size }}">'
       var element = $compile(markup)(scope)
       element.on('load', function () {
+        assert.equal('http://placehold.it/10x10', element[0].src)
         done()
       })
       scope.size = '10x10'
