@@ -10,25 +10,23 @@ angular.module('ngImage', [])
   
     return {
       restrict: 'E',
-      compile: function (__element, attr) {
-        var fn = attr.ngError && $parse(attr.ngError)
-        return function (scope, element) {
-          element.on('error', function (ev) {
-            var src = this.src
-          
-            // If theres an ng-error callback then call it
-            if (fn) {
-              scope.$apply(function () {
-                fn(scope, { $event: ev, $src: src })
-              })
-            }
-          
-            // If theres an ng-error-src then set it
-            if (attr.ngErrorSrc && !endsWith(src, attr.ngErrorSrc)) {
-              element.attr('src', attr.ngErrorSrc)
-            }
-          })
-        }
+      link: function (scope, element, attributes) {        
+        var fn = attributes.ngError && $parse(attributes.ngError)
+        element.on('error', function (ev) {
+          var src = this.src
+        
+          // If theres an ng-error callback then call it
+          if (fn) {
+            scope.$apply(function () {
+              fn(scope, { $event: ev, $src: src })
+            })
+          }
+        
+          // If theres an ng-error-src then set it
+          if (attributes.ngErrorSrc && !endsWith(src, attributes.ngErrorSrc)) {
+            element.attr('src', attributes.ngErrorSrc)
+          }
+        })
       }
     }
   }

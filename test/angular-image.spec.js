@@ -14,7 +14,7 @@ describe('ngImage', function () {
       var scope = $rootScope.$new()
       var markup = '<img src="http://placehold.it/10x10" ng-error="raise()">'
       scope.raise = function () {
-        throw new Error('error should not trigger on load')
+        done(new Error('error should not trigger on load'))
       }
       var element = $compile(markup)(scope)        
       scope.$digest()
